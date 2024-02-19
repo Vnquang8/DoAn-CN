@@ -1,0 +1,52 @@
+*{
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: 'Times New Roman', Times, serif;
+}
+body{
+  background-color: #F7F7F7;
+}
+nav{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 60px;
+  width: 100%;
+  background:white;
+  color: #ecf0f1
+}
+.logo{
+  background-color: black;
+  color: #ecf0f1;
+  display: block;
+  width: 100px;
+  height: 100%;
+  font-size: 30px;
+  font-weight: bold;
+  text-align: center;
+}
+nav a{
+  text-decoration: none;
+  color: black;
+  font-size: 20px;
+  padding: 10px 10px;
+}
+.navbar-item{
+  display: flex;
+  margin-right: 20px;
+
+}
+.search{
+  margin-right: 100px;
+  margin-top: 10px;
+}
+button{
+  background-color: white;
+  border: none;
+  vertical-align: middle;
+}
+form input{
+  border-radius: 10px;
+  height: 20px;
+}

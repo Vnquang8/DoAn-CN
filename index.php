@@ -1,0 +1,237 @@
+<?php
+session_start();
+?>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css">
+  <link rel="stylesheet" href="css/dropdown.css">
+  <link rel="stylesheet" href="css/navbar.css">
+  <link rel="stylesheet" href="style.css">
+  <title>Sun</title>
+</head>
+
+<body>
+  <nav>
+    <a href="index.php" class="logo">Sun</a>
+    <div>
+      <a href="index.php">Trang chủ</a>
+      <a href="sanpham.php">Sản phẩm</a>
+      <div class="dropdown">
+        <a href="#">Thể loại</a>
+        <div class="dropdown-content">
+          <?php 
+            require_once "DB/DBconnect.php";
+            $pstm = $conn->prepare("SELECT * FROM theloai");
+            $pstm->execute();
+            $data = $pstm->fetchAll(PDO::FETCH_ASSOC);
+            foreach($data as $item)
+            {?>
+              <a href="theloai/maintl.php?idtl=<?= $item['idtl'] ?>"><?=$item['tentl']?></a>
+            <?php
+            }
+          ?>
+        </div>
+      </div>
+      <a href="#">Đơn hàng</a>
+      <a href="gioithieutrang.php">Giới thiệu</a>
+    </div>
+    <div class="navbar-item">
+      <div class="search">
+        <form action="search.php" method="get">
+          <input type="text" name="keyword" id="" class="search-1" placeholder="Nhập tìm kiếm">
+          <button type="submit"><img src="img/icon-navbar/search.png" alt=""></button>
+        </form>
+      </div>
+      <a href="#"><img src="img/icon-navbar/cart.png" alt=""></a>
+
+      <div class="dropdown login-a">
+        <a href="login.php"><img src="img/icon-navbar/user.png" alt=""></a>
+        <div class="dropdown-content">
+          <?php
+          if (isset($_SESSION["islogin"])) {
+          ?>
+            <a href="logout.php">Đăng xuất</a>
+            <a href="">Tài Khoản</a>
+          <?php
+          } else {
+          ?>
+            <a href="login.php">Đăng nhập</a>
+          <?php
+          }
+          ?>
+        </div>
+      </div>
+  </nav>
+  <div id="slide">
+    <img src="img/img-slide/s0.jpg" alt="hinh" id="hinh">
+    <i class="fa fa-chevron-circle-left" onclick="prev()"></i>
+    <i class="fa fa-chevron-circle-right" onclick="next()"></i>
+  </div>
+
+
+  <?php
+  require_once "DB/DBconnect.php";
+  $pstm = $conn->prepare("SELECT * FROM `theloai` WHERE tentl = 'Giáo Dục'");
+  $pstm->execute();
+  $data = $pstm->fetch(PDO::FETCH_ASSOC);
+  echo "<H2>" . $data['tentl'] . "</H2>";
+  ?>
+  <hr>
+  <div id="content">
+    <?php
+    require_once "DB/DBconnect.php";
+    $pstm = $conn->prepare("SELECT * FROM sach JOIN theloai ON sach.idtl = theloai.idtl WHERE theloai.tentl = 'Giáo Dục' LIMIT 0,5");
+    $pstm->execute();
+    $data = $pstm->fetchAll(PDO::FETCH_ASSOC);
+    foreach ($data as $item) {
+    ?>
+      <div class="book">
+        <div class="img-content">
+          <img src="<?= $item['hinhanh'] ?>" alt="">
+        </div>
+        <div class="name-book">
+          <p><?= $item['tensach'] ?></p>
+        </div>
+        <div class="price">
+          <p><?= $item['gia'] ?>₫</p>
+          <p style="text-decoration: line-through;">30.000₫</p>
+        </div>
+        <div class="click-item">
+          <div class="click-a"><a href="trangchitiet.php?idsach=<?=$item['idsach']?>">Xem chi tiết</a></div>
+          <?php 
+            if(isset($_SESSION['islogin']))
+            {
+              ?>
+              <form action="add_to_cart.php" method="post"></form>
+                <input type="hidden" name="id_sach" value="<?= $item['idsach'] ?>">
+                <button type="submit" id="add_to_cart" name="add_to_cart">Thêm giỏ hàng </button>
+              <?php
+            }
+            else{
+              ?>
+              <div onclick="showLoginAlbert()" class="click-a"><a href="">Thêm giỏ hàng</a></div>
+              <?php
+            }
+          ?> 
+        </div>
+      </div>
+    <?php
+    }
+    ?>
+  </div>
+
+  <?php
+  require_once "DB/DBconnect.php";
+  $pstm = $conn->prepare("SELECT * FROM `theloai` WHERE tentl = 'Trinh Thám'");
+  $pstm->execute();
+  $data = $pstm->fetch(PDO::FETCH_ASSOC);
+  echo "<H2>" . $data['tentl'] . "</H2>";
+  ?>
+  <hr>
+  <div id="content">
+    <?php
+    require_once "DB/DBconnect.php";
+    $pstm = $conn->prepare("SELECT * FROM sach JOIN theloai ON sach.idtl = theloai.idtl WHERE theloai.tentl = 'Trinh Thám' LIMIT 0,5");
+    $pstm->execute();
+    $data = $pstm->fetchAll(PDO::FETCH_ASSOC);
+    foreach ($data as $item) {
+    ?>
+      <div class="book">
+        <div class="img-content">
+          <img src="<?= $item['hinhanh'] ?>" alt="">
+        </div>
+        <div class="name-book">
+          <p><?= $item['tensach'] ?></p>
+        </div>
+        <div class="price">
+          <p><?= $item['gia'] ?>₫</p>
+          <p style="text-decoration: line-through;">30.000₫</p>
+        </div>
+        <div class="click-item">
+          <div class="click-a"><a href="trangchitiet.php?idsach=<?=$item['idsach']?>">Xem chi tiết</a></div>
+          <?php 
+            if(isset($_SESSION['islogin']))
+            {
+              ?>
+              <div class="click-a"><a href="">Thêm giỏ hàng</a></div>
+              <?php
+            }
+            else{
+              ?>
+              <div onclick="showLoginAlbert()" class="click-a"><a href="">Thêm giỏ hàng</a></div>
+              <?php
+            }
+          ?>
+        </div>
+      </div>
+    <?php
+    }
+    ?>
+  </div>
+
+
+  <?php
+  require_once "DB/DBconnect.php";
+  $pstm = $conn->prepare("SELECT * FROM `theloai` WHERE tentl = 'Hài Hước'");
+  $pstm->execute();
+  $data = $pstm->fetch(PDO::FETCH_ASSOC);
+  echo "<H2>" . $data['tentl'] . "</H2>";
+  ?>
+  <hr>
+  <div id="content">
+    <?php
+    require_once "DB/DBconnect.php";
+    $pstm = $conn->prepare("SELECT * FROM sach JOIN theloai ON sach.idtl = theloai.idtl WHERE theloai.tentl = 'Hài Hước' LIMIT 0,5");
+    $pstm->execute();
+    $data = $pstm->fetchAll(PDO::FETCH_ASSOC);
+    foreach ($data as $item) {
+    ?>
+      <div class="book">
+        <div class="img-content">
+          <img src="<?= $item['hinhanh'] ?>" alt="">
+        </div>
+        <div class="name-book">
+          <p><?= $item['tensach'] ?></p>
+        </div>
+        <div class="price">
+          <p><?= $item['gia'] ?>₫</p>
+          <p style="text-decoration: line-through;">30.000₫</p>
+        </div>
+        <div class="click-item">
+          <div class="click-a"><a href="trangchitiet.php?idsach=<?=$item['idsach']?>">Xem chi tiết</a></div>
+          <?php 
+            if(isset($_SESSION['islogin']))
+            {
+              ?>
+              <div class="click-a"><a href="">Thêm giỏ hàng</a></div>
+              <?php
+            }
+            else{
+              ?>
+              <div onclick="showLoginAlbert()" class="click-a"><a href="">Thêm giỏ hàng</a></div>
+              <?php
+            }
+          ?>
+        </div>
+      </div>
+    <?php
+    }
+    ?>
+  </div>
+  <div id="footer">
+    <p>&copy; 2023 Sun Bookstore. All Rights Reserved.</p>
+    <div>
+      <a href="#" class="social-icon"><i class="fab fa-facebook"></i></a>
+      <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+      <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+    </div>
+    <p>Contact: contact@sunbookstore.com</p>
+  </div>
+  <script src="js/slide.js"></script>
+  <script src="js/add_to_cart.js"></script>
+</body>
+</html>
